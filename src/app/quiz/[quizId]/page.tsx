@@ -59,7 +59,9 @@ if (!quiz) {
 
       <p>{quiz.question_count} questions</p>
 
-      <QuizPlayer questions={safeQuestions} />
+      <QuizPlayer 
+      questions={safeQuestions}
+      quizId={quizId} />
     </main>
   );
 }

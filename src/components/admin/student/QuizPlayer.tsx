@@ -17,17 +17,67 @@ type QuizQuestion = {
 };
 
 type QuizPlayerProps = {
+  quizId: string;
   questions: QuizQuestion[];
 };
 
-export default function QuizPlayer({ questions }: QuizPlayerProps) {
+export default function QuizPlayer({
+  quizId,
+  questions,
+}: QuizPlayerProps) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+
+  const [answers, setAnswers] = useState<Record<number, string>>({});
+
+  const [submitting, setSubmitting] = useState(false);
 
   const question = questions[currentQuestion];
 
   if (!question) {
     return <p>No questions available.</p>;
+  }
+
+  const selectedAnswer = answers[question.question_id] ?? null;
+
+  function selectAnswer(answer: string) {
+    setAnswers((previousAnswers) => ({
+      ...previousAnswers,
+      [question.question_id]: answer,
+    }));
+  }
+
+  function goToPreviousQuestion() {
+    setCurrentQuestion((previous) => previous - 1);
+  }
+
+  function goToNextQuestion() {
+    setCurrentQuestion((previous) => previous + 1);
+  }
+
+  async function submitQuiz() {
+    setSubmitting(true);
+
+    const response = await fetch(`/api/quiz/${quizId}/submit`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        answers,
+      }),
+    });
+
+    const result = await response.json();
+
+if (!response.ok) {
+  console.error(result);
+  setSubmitting(false);
+  return;
+}
+
+
+window.location.href =
+  `/quiz/${quizId}/result?attemptId=${result.attempt_id}`;
   }
 
   return (
@@ -43,7 +93,7 @@ export default function QuizPlayer({ questions }: QuizPlayerProps) {
           <button
             key={option.label}
             type="button"
-            onClick={() => setSelectedAnswer(option.label)}
+            onClick={() => selectAnswer(option.label)}
           >
             {option.label}. {option.value}
           </button>
@@ -59,10 +109,7 @@ export default function QuizPlayer({ questions }: QuizPlayerProps) {
         {currentQuestion > 0 && (
           <button
             type="button"
-            onClick={() => {
-              setCurrentQuestion(currentQuestion - 1);
-              setSelectedAnswer(null);
-            }}
+            onClick={goToPreviousQuestion}
           >
             Previous
           </button>
@@ -71,15 +118,24 @@ export default function QuizPlayer({ questions }: QuizPlayerProps) {
         {currentQuestion < questions.length - 1 && (
           <button
             type="button"
-            onClick={() => {
-              setCurrentQuestion(currentQuestion + 1);
-              setSelectedAnswer(null);
-            }}
+            onClick={goToNextQuestion}
           >
             Next
           </button>
         )}
       </div>
+
+      {currentQuestion === questions.length - 1 && (
+        <div>
+          <button
+            type="button"
+            onClick={submitQuiz}
+            disabled={submitting}
+          >
+            {submitting ? 'Submitting...' : 'Submit Quiz'}
+          </button>
+        </div>
+      )}
 
       <p>{question.reference}</p>
     </div>
