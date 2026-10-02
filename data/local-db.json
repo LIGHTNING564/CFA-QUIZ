@@ -1,0 +1,62 @@
+{
+  "topics": [
+    {
+      "id": "topic-ethics",
+      "name": "Ethics",
+      "created_at": "2026-10-01T10:00:00.000Z",
+      "updated_at": "2026-10-01T10:00:00.000Z"
+    },
+    {
+      "id": "topic-quant",
+      "name": "Quantitative Methods",
+      "created_at": "2026-10-01T10:00:00.000Z",
+      "updated_at": "2026-10-01T10:00:00.000Z"
+    },
+    {
+      "id": "topic-fixed-income",
+      "name": "Fixed Income",
+      "created_at": "2026-10-01T10:00:00.000Z",
+      "updated_at": "2026-10-01T10:00:00.000Z"
+    }
+  ],
+  "quizzes": [
+    {
+      "id": "quiz-fixed-income-01",
+      "topic_id": "topic-fixed-income",
+      "title": "Bond Valuation Practice 01",
+      "content": [
+        {
+          "question_number": 1,
+          "total_questions": 2,
+          "question_id": 1572657,
+          "text": "A bond's value is most directly affected by which relationship?",
+          "options": [
+            { "label": "A", "value": "The relationship between price and yield" },
+            { "label": "B", "value": "The relationship between coupon and equity beta" },
+            { "label": "C", "value": "The relationship between duration and EPS" }
+          ],
+          "correct_answer": "A",
+          "explanation": "Bond prices and yields move inversely, all else equal.",
+          "reference": "Module 3.1, LOS 3.a"
+        },
+        {
+          "question_number": 2,
+          "total_questions": 2,
+          "question_id": 1572658,
+          "text": "If a stock decreases from $90 to $80, the continuously compounded rate of return for the period is:",
+          "options": [
+            { "label": "A", "value": "-0.1250" },
+            { "label": "B", "value": "-0.1000" },
+            { "label": "C", "value": "-0.1178" }
+          ],
+          "correct_answer": "C",
+          "explanation": "This is given by the natural logarithm of the new price divided by the old price; ln(80 / 90) = -0.1178.",
+          "reference": "Module 1.3, LOS 1.d"
+        }
+      ],
+      "question_count": 2,
+      "created_at": "2026-10-01T10:05:00.000Z",
+      "updated_at": "2026-10-01T10:05:00.000Z"
+    }
+  ]
+}

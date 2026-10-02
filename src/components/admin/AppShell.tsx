@@ -1,0 +1,28 @@
+import Link from 'next/link';
+import type { ReactNode } from 'react';
+import { isUsingLocalStore } from '@/lib/store';
+
+export default function AppShell({ children }: { children: ReactNode }) {
+  const local = isUsingLocalStore();
+  return (
+    <div className="app-shell">
+      <aside className="sidebar">
+        <div className="brand">
+          <div className="brand-mark">C</div>
+          <div>
+            <div className="brand-title">CFA Question Bank</div>
+            <div className="brand-subtitle">Admin workspace</div>
+          </div>
+        </div>
+        <nav className="sidebar-nav">
+          <Link href="/admin" className="nav-link active">Topics</Link>
+        </nav>
+        <div className="sidebar-footer">
+          <span className={local ? 'status-dot local' : 'status-dot'} />
+          <span>{local ? 'Local development store' : 'Supabase connected'}</span>
+        </div>
+      </aside>
+      <main className="main-content">{children}</main>
+    </div>
+  );
+}
