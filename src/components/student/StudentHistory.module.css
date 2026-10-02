@@ -1,0 +1,25 @@
+.attemptList { display: grid; gap: 14px; }
+.attemptCard { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 22px; padding: 20px 22px; border: 1px solid #dfe5e5; border-radius: 14px; background: #fff; box-shadow: 0 8px 24px rgba(18, 33, 43, .045); }
+.attemptCard:hover { border-color: #bfd1d5; box-shadow: 0 12px 28px rgba(18, 54, 65, .075); }
+.scoreRing { display: grid; width: 68px; height: 68px; place-items: center; border-radius: 50%; background: conic-gradient(#39748a var(--score), #e7eeec 0); }
+.scoreRing::before { position: absolute; width: 55px; height: 55px; border-radius: 50%; background: #fff; content: ''; }
+.scoreRing strong { position: relative; color: #164d67; font-family: Georgia, 'Times New Roman', serif; font-size: 18px; letter-spacing: -.03em; }
+.attemptTitle { margin: 0; color: #18212b; font-family: Georgia, 'Times New Roman', serif; font-size: 21px; letter-spacing: -.02em; line-height: 1.25; }
+.attemptDate { margin: 5px 0 0; color: #6b7680; font-size: 13px; }
+.breakdown { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; padding: 0; list-style: none; }
+.breakdownItem { padding: 5px 8px; border-radius: 6px; background: #f2f5f4; color: #53616a; font-size: 12px; font-weight: 700; }
+.breakdownItem strong { color: #25333d; }
+.reviewButton { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 9px 12px; border-radius: 8px; background: #164d67; color: #fff; font-size: 13px; font-weight: 750; white-space: nowrap; transition: background .15s ease, transform .15s ease; }
+.reviewButton:hover { background: #0e3e56; transform: translateY(-1px); }
+.reviewButton:focus-visible, .emptyAction:focus-visible { outline: 3px solid #79a9bd; outline-offset: 3px; }
+.emptyCard { padding: 38px 26px; border: 1px solid #dfe5e5; border-radius: 14px; background: #fff; box-shadow: 0 8px 24px rgba(18, 33, 43, .045); text-align: center; }
+.emptyIcon { display: grid; width: 44px; height: 44px; margin: 0 auto 15px; place-items: center; border-radius: 11px; background: #e7f0f2; color: #164d67; font-size: 21px; }
+.emptyCard h2 { margin: 0; color: #18212b; font-family: Georgia, 'Times New Roman', serif; font-size: 23px; }
+.emptyCard p { max-width: 430px; margin: 9px auto 0; color: #64707a; line-height: 1.55; }
+.emptyAction { display: inline-flex; margin-top: 18px; padding: 10px 14px; border-radius: 8px; background: #164d67; color: #fff; font-size: 14px; font-weight: 750; }
+.emptyAction:hover { background: #0e3e56; }
+.errorCard { padding: 18px 20px; border: 1px solid #e3c9c5; border-radius: 12px; background: #fff8f6; color: #78372e; line-height: 1.5; }
+.backLink { display: inline-flex; margin-top: 25px; color: #0e5576; font-size: 14px; font-weight: 750; text-decoration: underline; text-decoration-color: #9bc3d1; text-underline-offset: 4px; }
+.backLink:hover { color: #083f59; }
+.backLink:focus-visible { outline: 3px solid #79a9bd; outline-offset: 3px; }
+@media (max-width: 700px) { .attemptCard { grid-template-columns: auto minmax(0, 1fr); gap: 16px; padding: 18px; } .reviewButton { grid-column: 1 / -1; width: 100%; } }

@@ -1,6 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import QuizPlayer from '@/components/admin/student/QuizPlayer';
+import { StudentShell } from '@/components/student/StudentShell';
 
 type QuizPageProps = {
   params: Promise<{
@@ -29,18 +30,17 @@ export default async function QuizPage({ params }: QuizPageProps) {
 
   if (error) {
   return (
-    <main>
-      <h1>Quiz error</h1>
+    <StudentShell eyebrow="Practice quiz" title="Quiz error">
       <p>{error.message}</p>
-    </main>
+    </StudentShell>
   );
 }
 
 if (!quiz) {
   return (
-    <main>
-      <h1>Quiz not found</h1>
-    </main>
+    <StudentShell eyebrow="Practice quiz" title="Quiz not found">
+      <p>This quiz may no longer be available.</p>
+    </StudentShell>
   );
 }
 
@@ -54,14 +54,11 @@ if (!quiz) {
   }));
 
   return (
-    <main>
-      <h1>{quiz.title}</h1>
-
-      <p>{quiz.question_count} questions</p>
+    <StudentShell eyebrow="Practice quiz" title={quiz.title} description={`${quiz.question_count} questions`}>
 
       <QuizPlayer 
       questions={safeQuestions}
       quizId={quizId} />
-    </main>
+    </StudentShell>
   );
 }

@@ -1,8 +1,23 @@
 import { NextResponse } from 'next/server';
 import { parseAndValidateJson } from '@/lib/quiz-schema';
 import { deleteQuiz, getQuiz, updateQuiz } from '@/lib/store';
+import { getAdminAccess } from '@/lib/admin-access';
+
+async function requireAdmin() {
+  const access = await getAdminAccess();
+  if (!access.isAuthenticated) {
+    return NextResponse.json({ error: 'Authentication required.' }, { status: 401 });
+  }
+  if (!access.isAdmin) {
+    return NextResponse.json({ error: 'Admin access required.' }, { status: 403 });
+  }
+  return null;
+}
 
 export async function GET(_request: Request, context: { params: Promise<{ quizId: string }> }) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const { quizId } = await context.params;
     const quiz = await getQuiz(quizId);
@@ -14,6 +29,9 @@ export async function GET(_request: Request, context: { params: Promise<{ quizId
 }
 
 export async function PUT(request: Request, context: { params: Promise<{ quizId: string }> }) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const { quizId } = await context.params;
     const body = (await request.json()) as { topic_id?: string; title?: string; content?: unknown };
@@ -33,6 +51,9 @@ export async function PUT(request: Request, context: { params: Promise<{ quizId:
 }
 
 export async function DELETE(_request: Request, context: { params: Promise<{ quizId: string }> }) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const { quizId } = await context.params;
     await deleteQuiz(quizId);

@@ -1,8 +1,23 @@
 import { NextResponse } from 'next/server';
 import { parseAndValidateJson } from '@/lib/quiz-schema';
 import { createQuiz, listQuizzes } from '@/lib/store';
+import { getAdminAccess } from '@/lib/admin-access';
+
+async function requireAdmin() {
+  const access = await getAdminAccess();
+  if (!access.isAuthenticated) {
+    return NextResponse.json({ error: 'Authentication required.' }, { status: 401 });
+  }
+  if (!access.isAdmin) {
+    return NextResponse.json({ error: 'Admin access required.' }, { status: 403 });
+  }
+  return null;
+}
 
 export async function GET(request: Request) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const topicId = new URL(request.url).searchParams.get('topicId') ?? undefined;
     return NextResponse.json({ quizzes: await listQuizzes(topicId) });
@@ -12,6 +27,9 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const body = (await request.json()) as { topic_id?: string; title?: string; content?: unknown };
     const validation = parseAndValidateJson(JSON.stringify(body.content));

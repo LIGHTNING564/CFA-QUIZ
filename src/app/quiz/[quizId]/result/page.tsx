@@ -1,5 +1,6 @@
 import { redirect, notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { StudentShell } from '@/components/student/StudentShell';
 
 type QuizResultPageProps = {
   params: Promise<{
@@ -63,10 +64,7 @@ export default async function QuizResultPage({
   }
 
   return (
-    <main>
-      <h1>Quiz Result</h1>
-
-      <h2>{quiz.title}</h2>
+    <StudentShell eyebrow="Quiz complete" title="Quiz result" description={quiz.title}>
 
       <p>
         Score: {attempt.score_percentage}%
@@ -105,6 +103,6 @@ export default async function QuizResultPage({
           Back to topics
         </a>
       </div>
-    </main>
+    </StudentShell>
   );
 }

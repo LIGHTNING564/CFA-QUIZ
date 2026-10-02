@@ -1,5 +1,6 @@
 import { redirect, notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { StudentShell } from '@/components/student/StudentShell';
 
 type AttemptPageProps = {
   params: Promise<{
@@ -73,8 +74,7 @@ export default async function AttemptPage({
   }
 
   return (
-    <main>
-      <h1>{quiz.title}</h1>
+    <StudentShell eyebrow="Attempt review" title={quiz.title}>
 
       <h2>Attempt Result</h2>
 
@@ -171,6 +171,6 @@ export default async function AttemptPage({
       <div>
         <a href="/history">Back to history</a>
       </div>
-    </main>
+    </StudentShell>
   );
 }

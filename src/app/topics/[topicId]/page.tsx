@@ -1,5 +1,8 @@
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import { StudentShell } from '@/components/student/StudentShell';
+import styles from '@/components/student/StudentCatalog.module.css';
 
 type TopicPageProps = {
   params: Promise<{
@@ -41,30 +44,28 @@ export default async function TopicPage({ params }: TopicPageProps) {
   }
 
   return (
-    <main>
-      <h1>{topic.name}</h1>
+    <StudentShell eyebrow="Practice library" title={topic.name} description="Select a quiz when you are ready to practise.">
 
       {quizzes && quizzes.length > 0 ? (
-        <div>
+        <div className={styles.quizGrid}>
           {quizzes.map((quiz) => (
-            <div key={quiz.id}>
+            <article className={styles.quizCard} key={quiz.id}>
+              <span className={styles.quizBadge}>Practice quiz</span>
               <h2>{quiz.title}</h2>
 
-              <p>{quiz.question_count} questions</p>
+              <p className={styles.quizMeta}>{quiz.question_count} questions</p>
 
-              <a href={`/quiz/${quiz.id}`}>
-                Start quiz
-              </a>
-            </div>
+              <Link className={styles.startButton} href={`/quiz/${quiz.id}`}>
+                Start quiz <span aria-hidden="true">→</span>
+              </Link>
+            </article>
           ))}
         </div>
       ) : (
-        <p>No quizzes available in this topic yet.</p>
+        <p>No quizzes are available in this topic yet. Please check back soon.</p>
       )}
 
-      <div>
-        <a href="/topics">Back to topics</a>
-      </div>
-    </main>
+      <Link className={styles.backLink} href="/topics">← Back to topics</Link>
+    </StudentShell>
   );
 }

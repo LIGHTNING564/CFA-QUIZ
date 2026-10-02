@@ -1,5 +1,8 @@
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import { StudentShell } from '@/components/student/StudentShell';
+import styles from '@/components/student/StudentCatalog.module.css';
 
 export default async function TopicsPage() {
   const supabase = await createClient();
@@ -22,26 +25,26 @@ export default async function TopicsPage() {
   }
 
   return (
-    <main>
-      <h1>Topics</h1>
+    <StudentShell eyebrow="Practice library" title="Topics" description="Choose a topic to see its available practice quizzes.">
 
       {topics && topics.length > 0 ? (
-        <div>
-          {topics.map((topic) => (
-            <div key={topic.id}>
-              <a href={`/topics/${topic.id}`}>
-                {topic.name}
-              </a>
-            </div>
+        <div className={styles.topicGrid}>
+          {topics.map((topic, index) => (
+            <article className={styles.topicCard} key={topic.id}>
+              <span className={styles.topicNumber} aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+              <h2>{topic.name}</h2>
+              <p>Explore the available practice quizzes for this topic.</p>
+              <Link className={styles.cardAction} href={`/topics/${topic.id}`}>
+                View quizzes <span aria-hidden="true">→</span>
+              </Link>
+            </article>
           ))}
         </div>
       ) : (
-        <p>No topics available yet.</p>
+        <p>No topics are available yet. Please check back soon.</p>
       )}
 
-      <div>
-        <a href="/dashboard">Back to dashboard</a>
-      </div>
-    </main>
+      <Link className={styles.backLink} href="/dashboard">← Back to dashboard</Link>
+    </StudentShell>
   );
 }

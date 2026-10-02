@@ -1,0 +1,61 @@
+.shell {
+  min-height: 100vh;
+  background: #f7f7f5;
+  color: #18212b;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid #e2e4e0;
+  background: rgba(255, 255, 253, .94);
+  backdrop-filter: blur(14px);
+}
+
+.headerInner {
+  display: flex;
+  min-height: 68px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 28px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand { display: inline-flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 750; letter-spacing: -.01em; }
+.mark { display: grid; width: 29px; height: 29px; place-items: center; border-radius: 8px; background: #143b59; color: #fff; font-family: Georgia, serif; font-size: 15px; }
+.nav { display: flex; align-items: center; gap: 4px; }
+.navLink { padding: 8px 11px; border-radius: 7px; color: #5b6570; font-size: 14px; font-weight: 650; transition: background .15s ease, color .15s ease; }
+.navLink:hover { background: #edf1f1; color: #18212b; }
+.navLink:focus-visible, .brand:focus-visible { outline: 3px solid #79a9bd; outline-offset: 3px; }
+.navLinkActive { background: #e9f0f2; color: #123c58; }
+
+.page { width: min(1180px, 100%); margin: 0 auto; padding: 48px 28px 80px; }
+.pageIntro { margin-bottom: 32px; }
+.eyebrow { margin: 0 0 8px; color: #63717c; font-size: 11px; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
+.title { margin: 0; color: #16222c; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; letter-spacing: -.035em; line-height: 1.08; }
+.description { max-width: 650px; margin: 12px 0 0; color: #5d6772; font-size: 16px; line-height: 1.6; }
+.content { min-width: 0; }
+
+.card { border: 1px solid #e0e4e3; border-radius: 14px; background: #fff; box-shadow: 0 8px 24px rgba(18, 33, 43, .045); }
+.emptyState { padding: 36px 28px; text-align: center; }
+.emptyState h2 { margin: 0; font-family: Georgia, 'Times New Roman', serif; font-size: 22px; }
+.emptyState p { margin: 9px 0 0; color: #5d6772; line-height: 1.55; }
+.textLink { color: #0e5576; font-weight: 750; text-decoration: underline; text-decoration-color: #9bc3d1; text-underline-offset: 3px; }
+.textLink:hover { color: #083f59; }
+.textLink:focus-visible { outline: 3px solid #79a9bd; outline-offset: 3px; }
+
+.authShell { display: grid; min-height: 100vh; place-items: center; padding: 24px; background: #f2f4f1; }
+.authCard { width: min(440px, 100%); padding: 38px; border: 1px solid #dfe4e1; border-radius: 16px; background: #fff; box-shadow: 0 18px 50px rgba(18, 33, 43, .1); }
+.authBrand { margin-bottom: 32px; }
+
+@media (max-width: 640px) {
+  .headerInner { min-height: 60px; padding: 0 16px; gap: 12px; }
+  .brand { font-size: 14px; }
+  .navLink { padding: 7px 8px; font-size: 13px; }
+  .page { padding: 32px 16px 56px; }
+  .authShell { padding: 16px; }
+  .authCard { padding: 28px 22px; }
+}

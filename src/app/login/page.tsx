@@ -2,6 +2,8 @@
 
 import { FormEvent, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import Link from 'next/link';
+import { StudentAuthShell } from '@/components/student/StudentShell';
 
 export default function LoginPage() {
   const supabase = createClient();
@@ -32,8 +34,9 @@ export default function LoginPage() {
   }
 
   return (
-    <main>
-      <h1>Login</h1>
+    <StudentAuthShell>
+      <p>CFA PRACTICE</p>
+      <h1>Welcome back</h1>
 
       <form onSubmit={handleLogin}>
         <div>
@@ -64,6 +67,7 @@ export default function LoginPage() {
       </form>
 
       {message && <p>{message}</p>}
-    </main>
+      <p>New to CFA Practice? <Link href="/signup">Create an account</Link>.</p>
+    </StudentAuthShell>
   );
 }
