@@ -1,4 +1,25 @@
 :root {
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --student-bg: #f8fafc;
+  --student-surface: #ffffff;
+  --student-surface-muted: #eef2f7;
+  --student-text: #0f172a;
+  --student-muted: #475569;
+  --student-border: #d8e0ea;
+  --student-border-strong: #b9c6d6;
+  --student-primary: #1d4ed8;
+  --student-primary-strong: #1e40af;
+  --student-primary-soft: #eaf1ff;
+  --student-success: #10b981;
+  --student-success-strong: #047857;
+  --student-success-soft: #d1fae5;
+  --student-danger: #ef4444;
+  --student-danger-strong: #b91c1c;
+  --student-danger-soft: #fee2e2;
+  --student-warning: #f59e0b;
+  --student-warning-strong: #92400e;
+  --student-shadow: 0 14px 32px rgba(15, 23, 42, .08);
   --bg: #f6f8fb;
   --panel: #ffffff;
   --border: #e4e8ef;
@@ -20,12 +41,37 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font-sans);
 }
 a { color: inherit; text-decoration: none; }
 button, input, select { font: inherit; }
 button { cursor: pointer; }
 button:disabled { cursor: not-allowed; opacity: .6; }
+:focus-visible { outline: 2px solid #2563eb; outline-offset: 3px; }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --student-bg: #0f172a;
+    --student-surface: #111c2f;
+    --student-surface-muted: #1d2a3f;
+    --student-text: #f8fafc;
+    --student-muted: #cbd5e1;
+    --student-border: #314158;
+    --student-border-strong: #52647c;
+    --student-primary: #60a5fa;
+    --student-primary-strong: #93c5fd;
+    --student-primary-soft: #172b4d;
+    --student-success: #34d399;
+    --student-success-strong: #a7f3d0;
+    --student-success-soft: #123b35;
+    --student-danger: #f87171;
+    --student-danger-strong: #fecaca;
+    --student-danger-soft: #421d26;
+    --student-warning: #fbbf24;
+    --student-warning-strong: #fde68a;
+    --student-shadow: 0 18px 38px rgba(0, 0, 0, .32);
+  }
+}
 
 .app-shell { min-height: 100vh; display: flex; }
 .sidebar {

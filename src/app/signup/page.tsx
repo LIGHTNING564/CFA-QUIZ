@@ -4,6 +4,7 @@ import { FormEvent, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 import { StudentAuthShell } from '@/components/student/StudentShell';
+import styles from '@/components/student/StudentAuth.module.css';
 
 export default function SignupPage() {
   const supabase = createClient();
@@ -36,40 +37,46 @@ export default function SignupPage() {
 
   return (
     <StudentAuthShell>
-      <p>CFA PRACTICE</p>
-      <h1>Create your account</h1>
+      <div className={styles.brand}><span className={styles.mark} aria-hidden="true">C</span> CFA PRACTICE</div>
+      <h1 className={styles.heading}>Create your account</h1>
+      <p className={styles.intro}>Start building a clear record of your practice.</p>
 
-      <form onSubmit={handleSignup}>
-        <div>
-          <label htmlFor="email">Email</label>
+      <form className={styles.form} onSubmit={handleSignup}>
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor="email">Email address</label>
           <input
+            className={styles.input}
             id="email"
             type="email"
+            autoComplete="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             required
           />
         </div>
 
-        <div>
-          <label htmlFor="password">Password</label>
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor="password">Password</label>
           <input
+            className={styles.input}
             id="password"
             type="password"
+            autoComplete="new-password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             required
             minLength={6}
           />
+          <p className={styles.fieldHint}>Use at least 6 characters.</p>
         </div>
 
-        <button type="submit" disabled={loading}>
-          {loading ? 'Creating account...' : 'Sign up'}
+        <button className={styles.submit} type="submit" disabled={loading}>
+          {loading ? 'Creating account…' : 'Create account'}
         </button>
       </form>
 
-      {message && <p>{message}</p>}
-      <p>Already have an account? <Link href="/login">Log in</Link>.</p>
+      {message && <p className={`${styles.message} ${message.startsWith('Account created') ? styles.messageSuccess : ''}`} role="status">{message}</p>}
+      <p className={styles.footer}>Already have an account? <Link className={styles.footerLink} href="/login">Log in</Link>.</p>
     </StudentAuthShell>
   );
 }

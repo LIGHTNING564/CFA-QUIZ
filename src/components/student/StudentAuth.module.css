@@ -1,0 +1,20 @@
+.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--student-text); font-size: 14px; font-weight: 800; letter-spacing: .08em; }
+.mark { display: grid; width: 29px; height: 29px; place-items: center; border-radius: 8px; background: #143b59; color: #fff; font-family: Georgia, 'Times New Roman', serif; font-size: 15px; letter-spacing: 0; }
+.heading { margin: 31px 0 8px; color: var(--student-text); font-family: var(--font-sans); font-size: clamp(2rem, 7vw, 2.5rem); font-weight: 750; letter-spacing: -.035em; line-height: 1.08; }
+.intro { margin: 0 0 29px; color: var(--student-muted); font-size: 15px; line-height: 1.55; }
+.form { display: grid; gap: 18px; }
+.field { display: grid; gap: 7px; }
+.label { color: var(--student-text); font-size: 13px; font-weight: 750; }
+.input { width: 100%; min-height: 46px; border: 1px solid var(--student-border-strong); border-radius: 8px; background: var(--student-surface); color: var(--student-text); font-size: 16px; outline: none; padding: 0 12px; transition: border-color .15s ease, box-shadow .15s ease; }
+.input::placeholder { color: #9aa4aa; }
+.input:hover { border-color: var(--student-primary); }
+.input:focus { border-color: var(--student-primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--student-primary) 28%, transparent); }
+.fieldHint { margin: 0; color: var(--student-muted); font-size: 12px; line-height: 1.4; }
+.submit { display: inline-flex; min-height: 46px; align-items: center; justify-content: center; margin-top: 6px; border: 0; border-radius: 8px; background: var(--student-primary); color: #fff; font-size: 14px; font-weight: 750; transition: background .15s ease, transform .15s ease; }
+.submit:hover:not(:disabled) { background: var(--student-primary-strong); transform: translateY(-1px); }
+.submit:focus-visible, .footerLink:focus-visible { outline: 3px solid #79a9bd; outline-offset: 3px; }
+.submit:disabled { cursor: not-allowed; background: var(--student-muted); }
+.message { margin: 18px 0 0; padding: 11px 12px; border: 1px solid var(--student-danger); border-radius: 8px; background: var(--student-danger-soft); color: var(--student-danger-strong); font-size: 13px; line-height: 1.45; }
+.messageSuccess { border-color: var(--student-success); background: var(--student-success-soft); color: var(--student-success-strong); }
+.footer { margin: 25px 0 0; padding-top: 21px; border-top: 1px solid var(--student-border); color: var(--student-muted); font-size: 14px; text-align: center; }
+.footerLink { color: var(--student-primary); font-weight: 750; text-decoration: underline; text-decoration-color: currentColor; text-underline-offset: 3px; }
