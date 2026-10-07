@@ -1,6 +1,7 @@
 import { redirect, notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { StudentShell } from '@/components/student/StudentShell';
+import QuizResultCelebration from '@/components/student/QuizResultCelebration';
 
 type QuizResultPageProps = {
   params: Promise<{
@@ -64,45 +65,21 @@ export default async function QuizResultPage({
   }
 
   return (
-    <StudentShell eyebrow="Quiz complete" title="Quiz result" description={quiz.title}>
-
-      <p>
-        Score: {attempt.score_percentage}%
-      </p>
-
-      <p>
-        Correct: {attempt.correct_answers}
-      </p>
-
-      <p>
-        Incorrect: {attempt.incorrect_answers}
-      </p>
-
-      <p>
-        Unanswered: {attempt.unanswered}
-      </p>
-
-      <p>
-        Total questions: {attempt.total_questions}
-      </p>
-
-      <div>
-        <a href={`/history/${attempt.id}`}>
-          Review this attempt
-        </a>
-      </div>
-
-      <div>
-        <a href="/history">
-          View attempt history
-        </a>
-      </div>
-
-      <div>
-        <a href="/topics">
-          Back to topics
-        </a>
-      </div>
+    <StudentShell
+      eyebrow="Evaluation Summary"
+      title="Quiz Results"
+      description={quiz.title}
+    >
+      <QuizResultCelebration
+        score={Math.round(attempt.score_percentage)}
+        correct={attempt.correct_answers}
+        incorrect={attempt.incorrect_answers}
+        unanswered={attempt.unanswered}
+        total={attempt.total_questions}
+        quizId={quizId}
+        attemptId={attempt.id}
+        quizTitle={quiz.title}
+      />
     </StudentShell>
   );
 }

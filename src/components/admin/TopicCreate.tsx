@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Plus, X } from 'lucide-react';
 
 export default function TopicCreate() {
   const router = useRouter();
@@ -29,23 +30,41 @@ export default function TopicCreate() {
 
   return (
     <>
-      <button className="button primary" onClick={() => setOpen(true)}>+ Add Topic</button>
+      <button className="button primary" onClick={() => setOpen(true)}>
+        <Plus size={15} />
+        <span>Add Topic</span>
+      </button>
       {open && (
         <div className="modal-backdrop" role="presentation">
           <div className="modal-card">
             <div className="modal-header">
               <div>
                 <div className="eyebrow">NEW CONTENT CONTAINER</div>
-                <h2>Create topic</h2>
+                <h2>Create Topic</h2>
               </div>
-              <button className="icon-button" onClick={() => setOpen(false)} aria-label="Close">×</button>
+              <button className="icon-button" onClick={() => setOpen(false)} aria-label="Close">
+                <X size={18} />
+              </button>
             </div>
-            <label className="field-label" htmlFor="topic-name">Topic name</label>
-            <input id="topic-name" className="text-input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Fixed Income" autoFocus />
+            <label className="field-label" htmlFor="topic-name">
+              Topic Name
+            </label>
+            <input
+              id="topic-name"
+              className="text-input"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. Fixed Income or Derivatives"
+              autoFocus
+            />
             {error && <div className="error-box">{error}</div>}
             <div className="modal-actions">
-              <button className="button secondary" onClick={() => setOpen(false)}>Cancel</button>
-              <button className="button primary" onClick={submit} disabled={saving}>{saving ? 'Creating…' : 'Create topic'}</button>
+              <button className="button secondary" onClick={() => setOpen(false)}>
+                Cancel
+              </button>
+              <button className="button primary" onClick={submit} disabled={saving}>
+                {saving ? 'Creating…' : 'Create Topic'}
+              </button>
             </div>
           </div>
         </div>
