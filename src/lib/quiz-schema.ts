@@ -96,25 +96,5 @@ export function validateQuizContent(input: unknown): {
     : { success: true, data: questions, issues: [] };
 }
 
-export function parseAndValidateJson(text: string) {
-  try {
-    const parsed: unknown = JSON.parse(text);
-    return validateQuizContent(parsed);
-  } catch (error) {
-    const raw = error instanceof Error ? error.message : 'Invalid JSON.';
 
-    // Give a more actionable message for the common "unsupported Unicode escape" error
-    // which happens when the pasted text contains curly quotes (\u201c, \u201d),
-    // em-dashes (\u2013), or other non-ASCII characters that aren't valid JSON escape sequences.
-    const isUnicode = raw.toLowerCase().includes('unicode') || raw.toLowerCase().includes('escape');
-    const message = isUnicode
-      ? `Invalid JSON: ${raw}. This usually means your text contains special characters (curly quotes \u201c\u201d, em-dashes \u2013, etc.) copied from a PDF or Word document. Replace them with plain ASCII equivalents (" " and -).`
-      : raw;
-
-    return {
-      success: false,
-      issues: [{ path: 'json', message }],
-    };
-  }
-}
 
