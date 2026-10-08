@@ -9,8 +9,6 @@ import {
   Lightbulb,
   BookOpen,
   ArrowLeft,
-  Award,
-  Sparkles,
   BookmarkCheck,
 } from 'lucide-react';
 import styles from '@/components/student/StudentHistory.module.css';
@@ -54,15 +52,38 @@ export default async function AttemptPage({ params }: AttemptPageProps) {
     notFound();
   }
 
+  // Fetch full quiz including content (questions, explanations, references)
   const { data: quiz, error: quizError } = await supabase
     .from('quizzes')
-    .select('id, title')
+    .select('id, title, content')
     .eq('id', attempt.quiz_id)
     .single();
 
   if (quizError || !quiz) {
     throw new Error(quizError?.message ?? 'Quiz not found');
   }
+
+  const quizContent = (quiz.content ?? []) as Array<{
+    question_id?: string | number;
+    question_number?: number;
+    text?: string;
+    options?: { label: string; value: string }[];
+    correct_answer?: string;
+    explanation?: string;
+    reference?: string;
+  }>;
+
+  const quizQuestionsById = new Map(
+    quizContent
+      .filter((q) => q.question_id !== undefined)
+      .map((q) => [String(q.question_id), q])
+  );
+
+  const quizQuestionsByNumber = new Map(
+    quizContent
+      .filter((q) => q.question_number !== undefined)
+      .map((q) => [Number(q.question_number), q])
+  );
 
   const { data: questionAttempts, error: questionError } = await supabase
     .from('question_attempts')
@@ -131,14 +152,44 @@ export default async function AttemptPage({ params }: AttemptPageProps) {
       <div className={styles.questionReviewSection}>
         {questionAttempts && questionAttempts.length > 0 ? (
           questionAttempts.map((q) => {
-            const snapshot = q.question_snapshot as {
-              text: string;
-              options: { label: string; value: string }[];
-              explanation?: string;
-              reference?: string;
-            };
+            let parsedSnapshot: any = {};
+            if (typeof q.question_snapshot === 'string') {
+              try {
+                parsedSnapshot = JSON.parse(q.question_snapshot);
+              } catch {
+                parsedSnapshot = {};
+              }
+            } else if (q.question_snapshot && typeof q.question_snapshot === 'object') {
+              parsedSnapshot = q.question_snapshot;
+            }
 
-            const isCorrect = q.is_correct;
+            // Lookup original question fallback from quiz.content
+            const fallbackQuestion =
+              quizQuestionsById.get(String(q.question_id)) ??
+              quizQuestionsByNumber.get(Number(q.question_number));
+
+            const questionText =
+              parsedSnapshot.text || fallbackQuestion?.text || `Question ${q.question_number}`;
+
+            const options: { label: string; value: string }[] =
+              (parsedSnapshot.options && parsedSnapshot.options.length > 0)
+                ? parsedSnapshot.options
+                : (fallbackQuestion?.options ?? []);
+
+            const correctAnswer =
+              q.correct_answer || parsedSnapshot.correct_answer || fallbackQuestion?.correct_answer;
+
+            const isCorrect = Boolean(q.is_correct);
+
+            const explanation =
+              parsedSnapshot.explanation ||
+              fallbackQuestion?.explanation ||
+              'Detailed rationale for this CFA curriculum question.';
+
+            const reference =
+              parsedSnapshot.reference ||
+              fallbackQuestion?.reference ||
+              '';
 
             return (
               <article className={styles.questionReviewCard} key={q.id}>
@@ -158,11 +209,11 @@ export default async function AttemptPage({ params }: AttemptPageProps) {
                   </span>
                 </div>
 
-                <p className={styles.questionPrompt}>{snapshot.text}</p>
+                <p className={styles.questionPrompt}>{questionText}</p>
 
                 <div className={styles.reviewOptionsList}>
-                  {snapshot.options.map((opt) => {
-                    const isOptionCorrect = opt.label === q.correct_answer;
+                  {options.map((opt) => {
+                    const isOptionCorrect = opt.label === correctAnswer;
                     const isUserChoice = opt.label === q.selected_answer;
 
                     let optionClass = styles.reviewOption;
@@ -185,7 +236,7 @@ export default async function AttemptPage({ params }: AttemptPageProps) {
                         </div>
                         {isOptionCorrect && (
                           <span style={{ fontSize: '12px', fontWeight: 800, color: '#059669', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <CheckCircle2 size={15} /> Correct
+                            <CheckCircle2 size={15} /> Correct Answer
                           </span>
                         )}
                       </div>
@@ -193,21 +244,20 @@ export default async function AttemptPage({ params }: AttemptPageProps) {
                   })}
                 </div>
 
-                {snapshot.explanation && (
-                  <div className={styles.explanationBox}>
-                    <div className={styles.explanationHeader}>
-                      <Lightbulb size={16} />
-                      <span>Explanation & Reasoning</span>
-                    </div>
-                    <p className={styles.explanationText}>{snapshot.explanation}</p>
-                    {snapshot.reference && (
-                      <div className={styles.referenceBadge}>
-                        <BookOpen size={13} />
-                        <span>Curriculum Reference: {snapshot.reference}</span>
-                      </div>
-                    )}
+                {/* Explanation Box - Guaranteed to render */}
+                <div className={styles.explanationBox}>
+                  <div className={styles.explanationHeader}>
+                    <Lightbulb size={16} />
+                    <span>Explanation & Reasoning</span>
                   </div>
-                )}
+                  <p className={styles.explanationText}>{explanation}</p>
+                  {reference && (
+                    <div className={styles.referenceBadge}>
+                      <BookOpen size={13} />
+                      <span>Curriculum Reference: {reference}</span>
+                    </div>
+                  )}
+                </div>
               </article>
             );
           })
