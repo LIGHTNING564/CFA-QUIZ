@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, X } from 'lucide-react';
 
@@ -10,14 +10,24 @@ export default function TopicCreate() {
   const [name, setName] = useState('');
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+  const adminTokenRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    fetch('/api/admin/token')
+      .then((res) => res.json())
+      .then((data: { token?: string }) => { if (data.token) adminTokenRef.current = data.token; })
+      .catch(() => {});
+  }, []);
 
   async function submit() {
     setError('');
     if (!name.trim()) return setError('Enter a topic name.');
     setSaving(true);
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (adminTokenRef.current) headers['x-admin-secret'] = adminTokenRef.current;
     const response = await fetch('/api/topics', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({ name }),
     });
     const result = (await response.json()) as { error?: string };

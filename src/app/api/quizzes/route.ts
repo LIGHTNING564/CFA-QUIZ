@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
 import { parseAndValidateJson } from '@/lib/quiz-schema';
 import { createQuiz, listQuizzes } from '@/lib/store';
-import { getAdminAccess } from '@/lib/admin-access';
+import { getAdminAccess, isAdminSecret } from '@/lib/admin-access';
 
-async function requireAdmin() {
+async function requireAdmin(request: Request) {
+  // Fast path: valid admin secret header (set by QuizEditor after page-level auth)
+  if (isAdminSecret(request)) return null;
+
+  // Slow path: verify via Supabase session cookie
   const access = await getAdminAccess();
   if (!access.isAuthenticated) {
     return NextResponse.json({ error: 'Authentication required.' }, { status: 401 });
@@ -15,7 +19,7 @@ async function requireAdmin() {
 }
 
 export async function GET(request: Request) {
-  const denied = await requireAdmin();
+  const denied = await requireAdmin(request);
   if (denied) return denied;
 
   try {
@@ -27,7 +31,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const denied = await requireAdmin();
+  const denied = await requireAdmin(request);
   if (denied) return denied;
 
   try {

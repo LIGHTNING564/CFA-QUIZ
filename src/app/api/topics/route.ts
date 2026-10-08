@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
 import { createTopic, listTopics } from '@/lib/store';
-import { getAdminAccess } from '@/lib/admin-access';
+import { getAdminAccess, isAdminSecret } from '@/lib/admin-access';
 
-async function requireAdmin() {
+async function requireAdmin(request: Request) {
+  if (isAdminSecret(request)) return null;
+
   const access = await getAdminAccess();
   if (!access.isAuthenticated) {
     return NextResponse.json({ error: 'Authentication required.' }, { status: 401 });
@@ -13,8 +15,8 @@ async function requireAdmin() {
   return null;
 }
 
-export async function GET() {
-  const denied = await requireAdmin();
+export async function GET(request: Request) {
+  const denied = await requireAdmin(request);
   if (denied) return denied;
 
   try {
@@ -25,7 +27,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const denied = await requireAdmin();
+  const denied = await requireAdmin(request);
   if (denied) return denied;
 
   try {

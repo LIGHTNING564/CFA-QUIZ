@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Quiz, Topic } from '@/lib/types';
 import { parseAndValidateJson } from '@/lib/quiz-schema';
@@ -43,6 +43,18 @@ export default function QuizEditor({ topics, initialQuiz, presetTopicId }: Props
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(Boolean(initialQuiz));
+  const adminTokenRef = useRef<string | null>(null);
+
+  // Fetch admin token once on mount so save requests don't depend on Supabase
+  // SSR cookie reading inside Route Handlers (which can silently fail).
+  useEffect(() => {
+    fetch('/api/admin/token')
+      .then((res) => res.json())
+      .then((data: { token?: string; error?: string }) => {
+        if (data.token) adminTokenRef.current = data.token;
+      })
+      .catch(() => { /* non-fatal – falls back to cookie auth */ });
+  }, []);
 
   const validation = useMemo(() => parseAndValidateJson(jsonText), [jsonText]);
   const questions = validation.success ? validation.data ?? [] : [];
@@ -65,9 +77,11 @@ export default function QuizEditor({ topics, initialQuiz, presetTopicId }: Props
     setError('');
     const url = initialQuiz ? `/api/quizzes/${initialQuiz.id}` : '/api/quizzes';
     const method = initialQuiz ? 'PUT' : 'POST';
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (adminTokenRef.current) headers['x-admin-secret'] = adminTokenRef.current;
     const response = await fetch(url, {
       method,
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({ topic_id: topicId, title, content: validation.data }),
     });
     const result = (await response.json()) as { error?: string; quiz?: Quiz; issues?: { path: string; message: string }[] };

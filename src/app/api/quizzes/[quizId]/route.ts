@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
 import { parseAndValidateJson } from '@/lib/quiz-schema';
 import { deleteQuiz, getQuiz, updateQuiz } from '@/lib/store';
-import { getAdminAccess } from '@/lib/admin-access';
+import { getAdminAccess, isAdminSecret } from '@/lib/admin-access';
 
-async function requireAdmin() {
+async function requireAdmin(request: Request) {
+  // Fast path: valid admin secret header
+  if (isAdminSecret(request)) return null;
+
+  // Slow path: verify via Supabase session cookie
   const access = await getAdminAccess();
   if (!access.isAuthenticated) {
     return NextResponse.json({ error: 'Authentication required.' }, { status: 401 });
@@ -15,7 +19,7 @@ async function requireAdmin() {
 }
 
 export async function GET(_request: Request, context: { params: Promise<{ quizId: string }> }) {
-  const denied = await requireAdmin();
+  const denied = await requireAdmin(_request);
   if (denied) return denied;
 
   try {
@@ -29,7 +33,7 @@ export async function GET(_request: Request, context: { params: Promise<{ quizId
 }
 
 export async function PUT(request: Request, context: { params: Promise<{ quizId: string }> }) {
-  const denied = await requireAdmin();
+  const denied = await requireAdmin(request);
   if (denied) return denied;
 
   try {
@@ -51,7 +55,7 @@ export async function PUT(request: Request, context: { params: Promise<{ quizId:
 }
 
 export async function DELETE(_request: Request, context: { params: Promise<{ quizId: string }> }) {
-  const denied = await requireAdmin();
+  const denied = await requireAdmin(_request);
   if (denied) return denied;
 
   try {
